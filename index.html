@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blogs Website</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <h1>Blogs Website</h1>
+  <ul id="List"></ul>
+
+  <script>
+    const BlogsApiUrl = "https://saasaro.com/blog/wp-json/wp/v2/posts?per_page=4&_embed";
+
+    function callAPI() {
+      fetch(BlogsApiUrl)
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          return response.json();
+        })
+        .then(data => displayData(data))
+        .catch(error => {
+          console.error('Error calling API:', error);
+        });
+    }
+
+    function displayData(data) {
+      const blogList = document.getElementById('List');
+
+      for (let i = 0; i < 4 && i < data.length; i++) {
+        const blog = data[i];
+        const listItem = document.createElement('li');
+        listItem.innerHTML = `<strong>${blog.title.rendered}</strong> (${blog.date}): ${blog.excerpt.rendered}`;
+        blogList.appendChild(listItem);
+      }
+    }
+
+    callAPI();
+  </script>
+</body>
+
+</html>
